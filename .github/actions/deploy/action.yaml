@@ -43,4 +43,5 @@ runs:
         ssh -v ${{ inputs.server_user }}@${{ inputs.server_ip }}
 
     - name: Deploy with SSH
+      shell: bash
       run: ssh ${{ inputs.server_user }}@${{ inputs.server_ip }} "cd /home/deployer && ./deploy.sh"
