@@ -9,16 +9,24 @@
 # ====================================================
 
 # After running the speed_run_deploy.sh script, do this:
-# Setup Github Actions:"
-# 1. Copy the public key to your GitHub account: GitHub → Settings → SSH and GPG Keys
+# Setup Github Actions:
+# 2. Copy the public key to your
 # cat ~/.ssh/deployer.pub | pbcopy
-# 2. Add new SSH Key and paste the contents in "Key"
-# 3. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
+# 3. Go to https://github.com/settings/keys
+# 4. Click 'Add new SSH' Key and paste the contents in public key field
+# 5. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
 # cat ~/.ssh/deployer | pbcopy
-# 4. Go to GitHub → Repo Settings → Secrets and Variables → Actions
-# 5. Create secret SSH_PRIVATE_KEY and paste the private key contents
-# 6. Create secret: SERVER_IP and paste <your server IP>"
-# 7. Create secret: SERVER_USER and paste <your deployer user (default is 'deployer')>
+# 6. Push your code to Github
+# 7. Copy the repository URL
+# 8. Go to https://github.com/<YOUR GITHUB USER>/<YOUR REPO NAME>/settings/secrets/actions
+# 9. Create secret SSH_PRIVATE_KEY and paste the private key contents
+# 10. Create secret: SERVER_IP as <YOUR SERVER IP>
+# 11. Create secret: SERVER_USER as <YOUR SERVER USER>
+# 12. SSH into your server using the deployer user:
+# ssh -i ~/.ssh/deployer deployer@<YOUR SERVER IP>
+# 13. Clone your repository into /var/www/<DOMAIN NAME>
+# git clone https://github.com/<YOUR GITHUB USER>/<YOUR REPO NAME>.git /var/www/<DOMAIN NAME>
+# Done! Every merge to main branch will be deployed.
 
 # ====================================================
 # CHECKING LOGS
