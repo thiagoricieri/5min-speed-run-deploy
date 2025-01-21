@@ -1,11 +1,19 @@
 #!/bin/bash
 
-# Copy the script using:
+# ====================================================
+# 5MIN SPEED RUN DEPLOY SCRIPT
+# ====================================================
+
+# Usage:
 # scp speed_run_deploy.sh USER@SERVER_UP:~/speed_run_deploy.sh
 # then log into your server and run:
 # bash ~/.speed_run_deploy.sh
+# Warning: You must have added your server IP to your domain A registry first
 
-# Prompt for required information
+# ====================================================
+# THE FOLLOWING MUST BE EXECUTED IN YOUR SERVER:
+# ====================================================
+
 echo "😃 WELCOME TO SPEED RUN DEPLOY v1.0!"
 read -p "  - Enter domain name: " DOMAIN_NAME
 read -p "  - Enter server IP: " SERVER_IP
@@ -34,18 +42,25 @@ if ! nslookup "$DOMAIN_NAME" > /dev/null 2>&1; then
     exit 1
 fi
 
+# UPDATE & UPGRADE -----------------------------------
 # Update system and install dependencies
 echo "📦 Updating and installing dependencies..."
 sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 sudo apt install -y nginx nodejs npm certbot python3-certbot-nginx git curl
 
+# PM2 ------------------------------------------------
+
 # Install PM2 globally
 sudo npm install -g pm2
+
+# DIRECTORIES ----------------------------------------
 
 # Create site directory
 echo "🗂️ Creating site directory..."
 sudo mkdir -p /var/www/$DOMAIN_NAME
 sudo chown -R $USER:$USER /var/www/$DOMAIN_NAME
+
+# DEPLOYER -------------------------------------------
 
 # Create deploy user
 echo "👨‍🔧 Creating deploy user: $DEPLOY_USER..."
@@ -57,6 +72,8 @@ sudo ssh-keygen -t rsa -b 4096 -C "$DEPLOY_USER@$SERVER_IP" -f /home/$DEPLOY_USE
 sudo cat /home/$DEPLOY_USER/.ssh/deployer.pub > /home/$DEPLOY_USER/.ssh/authorized_keys
 sudo chown -R $DEPLOY_USER:$DEPLOY_USER /home/$DEPLOY_USER/.ssh
 
+# PERMISSIONS ----------------------------------------
+
 # Manage directory permissions
 sudo chmod 700 /home/$DEPLOY_USER/.ssh
 sudo chmod 600 /home/$DEPLOY_USER/.ssh/authorized_keys
@@ -65,6 +82,8 @@ sudo mv /home/$DEPLOY_USER/.ssh/deployer.pub /home/$DEPLOY_USER/deployer.pub
 
 # Set permissions
 sudo chown -R $DEPLOY_USER:$DEPLOY_USER /var/www/$DOMAIN_NAME
+
+# FIREWALL -------------------------------------------
 
 # Configure firewall
 echo "🔥 Configuring firewall..."
@@ -91,9 +110,13 @@ echo "server {
 sudo ln -s $NGINX_CONF /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl restart nginx
 
+# SSL CERT -------------------------------------------
+
 # Obtain SSL certificate
 echo "🔐 Obtaining SSL certificate..."
 sudo certbot --nginx -d $DOMAIN_NAME --non-interactive --agree-tos -m admin@$DOMAIN_NAME
+
+# DEPLOY SCRIPT --------------------------------------
 
 # Create deploy script
 echo "🏃‍♂️ Creating deploy script..."
@@ -116,7 +139,10 @@ pm2 list
 sudo chmod +x $DEPLOY_SCRIPT
 sudo chown $DEPLOY_USER:$DEPLOY_USER $DEPLOY_SCRIPT
 
-# Everything's good:
+# ====================================================
+# WRAPPING UP...
+# ====================================================
+
 echo "✅ Setup complete! Now, do this:"
 echo " - Copy your SSH key to your local machine with (run from your local machine):"
 echo "scp root@$SERVER_IP:/home/$DEPLOY_USER/deployer ~/.ssh/deployer"

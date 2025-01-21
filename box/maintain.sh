@@ -5,6 +5,20 @@
 # bash ./maintain.sh
 
 # ====================================================
+# RIGHT AFTER SETTING UP THE BOX
+# ====================================================
+
+# After running the speed_run_deploy.sh script, do this:
+# Setup Github Actions:"
+# 1. Run the commands above so you have the keys in your machine
+# 2. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
+# cat ~/.ssh/deploy | pbcopy
+# 3. Go to GitHub → Repo Settings → Secrets and Variables → Actions
+# 4. Create secret SSH_PRIVATE_KEY and paste the private key contents
+# 5. Create secret: SERVER_IP and paste <your server IP>"
+# 5. Create secret: SERVER_USER and paste <your deployer user (default is 'deployer')>
+
+# ====================================================
 # CHECKING LOGS
 # ====================================================
 
