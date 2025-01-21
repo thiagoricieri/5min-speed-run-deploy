@@ -10,13 +10,15 @@
 
 # After running the speed_run_deploy.sh script, do this:
 # Setup Github Actions:"
-# 1. Run the commands above so you have the keys in your machine
-# 2. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
-# cat ~/.ssh/deploy | pbcopy
-# 3. Go to GitHub → Repo Settings → Secrets and Variables → Actions
-# 4. Create secret SSH_PRIVATE_KEY and paste the private key contents
-# 5. Create secret: SERVER_IP and paste <your server IP>"
-# 5. Create secret: SERVER_USER and paste <your deployer user (default is 'deployer')>
+# 1. Copy the public key to your GitHub account: GitHub → Settings → SSH and GPG Keys
+# cat ~/.ssh/deployer.pub | pbcopy
+# 2. Add new SSH Key and paste the contents in "Key"
+# 3. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
+# cat ~/.ssh/deployer | pbcopy
+# 4. Go to GitHub → Repo Settings → Secrets and Variables → Actions
+# 5. Create secret SSH_PRIVATE_KEY and paste the private key contents
+# 6. Create secret: SERVER_IP and paste <your server IP>"
+# 7. Create secret: SERVER_USER and paste <your deployer user (default is 'deployer')>
 
 # ====================================================
 # CHECKING LOGS
