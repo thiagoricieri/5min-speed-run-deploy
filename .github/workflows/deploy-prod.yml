@@ -1,0 +1,31 @@
+name: Deploy → to Prod
+
+on:
+  # This means all pushes to main will be deployed
+  push:
+    branches:
+      - main
+  # But you can dispatch this job at will too:
+  workflow_dispatch:
+
+env:
+  # input your domain
+  domain: example.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Production
+        uses: ./.github/actions/deploy
+        with:
+          private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          server_ip: ${{ secrets.SERVER_IP }}
+          server_user: ${{ secrets.SERVER_USER }}
+          deploy_env: production
+          deploy_path: /var/www/${{ env.domain }}
+          process_name: ${{ env.domain }}
+          start_command: start

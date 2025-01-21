@@ -1,0 +1,46 @@
+name: 'Deploy!'
+description: 'Deploy site to my VPS'
+
+inputs:
+  private_key:
+    description: 'SSH Private Key'
+    required: true
+  server_ip:
+    description: 'VPS Server IP'
+    required: true
+  server_user:
+    description: 'VPS Server User'
+    required: true
+  deploy_env:
+    description: 'Deploy environment for Next.js'
+    required: true
+  deploy_path:
+    description: 'Deploy path'
+    required: true
+  process_name:
+    description: 'PM2 process name in the machine'
+    required: true
+  start_command:
+    description: 'Start command to create a pm2 process'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up SSH
+      shell: bash
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ inputs.private_key }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ls -lah ~/.ssh
+        ssh-keyscan -H ${{ inputs.server_ip }} >> ~/.ssh/known_hosts
+
+    - name: Test SSH Connection
+      shell: bash
+      run: |
+        ssh -i ~/.ssh/id_rsa ${{ inputs.server_user }}@${{ inputs.server_ip }} "echo 'Connected successfully'"
+        ssh -v ${{ inputs.server_user }}@${{ inputs.server_ip }}
+
+    - name: Deploy with SSH
+      run: ssh ${{ inputs.server_user }}@${{ secrets.SERVER_IP }} "cd /home/deployer && ./deploy.sh"
