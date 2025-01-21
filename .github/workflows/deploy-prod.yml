@@ -8,9 +8,9 @@ on:
   # But you can dispatch this job at will too:
   workflow_dispatch:
 
-env:
-  # input your domain
-  domain: example.com
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -25,7 +25,3 @@ jobs:
           private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           server_ip: ${{ secrets.SERVER_IP }}
           server_user: ${{ secrets.SERVER_USER }}
-          deploy_env: production
-          deploy_path: /var/www/${{ env.domain }}
-          process_name: ${{ env.domain }}
-          start_command: start

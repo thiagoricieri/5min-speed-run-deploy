@@ -11,18 +11,6 @@ inputs:
   server_user:
     description: 'VPS Server User'
     required: true
-  deploy_env:
-    description: 'Deploy environment for Next.js'
-    required: true
-  deploy_path:
-    description: 'Deploy path'
-    required: true
-  process_name:
-    description: 'PM2 process name in the machine'
-    required: true
-  start_command:
-    description: 'Start command to create a pm2 process'
-    required: true
 
 runs:
   using: 'composite'
