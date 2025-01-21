@@ -130,8 +130,8 @@ echo \"📦 Install and build...\"
 npm install
 npm run build
 echo \"⚙️ Starting the Next.js '$DOMAIN_NAME' app...\"
-npm run start -- -p $NODE_PORT &
-pm2 restart $DOMAIN_NAME || pm2 start npm --name \"$DOMAIN_NAME\" -- run start -- -p $NODE_PORT
+pm2 list | grep -wq "$DOMAIN_NAME" && pm2 delete $DOMAIN_NAME
+pm2 start "npm run start" --name "$DOMAIN_NAME"
 pm2 save
 pm2 list
 " | sudo tee $DEPLOY_SCRIPT

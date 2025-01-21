@@ -4,7 +4,7 @@ export default function Home() {
       <div className="card bg-base-100 shadow-xl max-w-2xl w-full">
         <div className="card-body">
           <h1 className="card-title text-3xl font-bold text-center mb-4">
-            Sample Speed Run Deploy App (<code>v1.1</code>)
+            Sample Speed Run Deploy App (<code>v1.0</code>)
           </h1>
           <p className="text-base-content mb-6">
             This is a sample Next.js app to test the 5min
