@@ -81,9 +81,25 @@ Done! Every merge to main branch will be deployed.
 18. The action will run automatically, wait until it finishes
 19. Access your domain and there you have it!
 
-### Reach out
+## Boilerplate
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). You may use the boilerplate. Or if you want to deploy a different type of application, go to `speed_run_deploy.sh`
+### Use the template for a Next.js application...
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). You may use the boilerplate as is, it works!
+
+### ...or use it for another stack!
+
+You just need the following files if you want just the deploy script:
+
+```
+.github/actions/deploy.yaml
+.github/workflows/deploy-prod.yaml
+box/speed_run_deploy.sh
+```
+
+You will also need to edit `speed_run_deploy.sh` because it creates a `deploy.sh` script that you may want to edit.
+
+Cheers,
 
 **Thiago V Ricieri**
 
