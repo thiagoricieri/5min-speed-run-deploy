@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## 5min _Speed Run_ Deploy
 
-## Getting Started
+This is a simple setup and deploy scripts to run a server with Nginx, Node and SSL enabled.
 
-First, run the development server:
+### Must-Haves
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Have your code in a GitHub repository
+2. Have a server running somewhere (I use Digital Ocean)
+3. Have a domain with `A` record pointing to your server IP
+
+### Getting Started
+
+1. Copy the script to your box using:
+
+```shell
+scp box/speed_run_deploy.sh root@server_ip:~/speed_run_deploy.sh
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Log into your server
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```shell
+ssh root@server_ip
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> Obs: Assuming you're logging in as `root`, the script will create a deployer user.
 
-## Learn More
+3. Run the script and follow the instructions!
 
-To learn more about Next.js, take a look at the following resources:
+```shell
+bash speed_run_deploy.sh
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+It will install Nginx, PM2, Node.js, setup SSL and Firewall for you.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### After Setup...
 
-## Deploy on Vercel
+4. Exit the box
+5. (From your machine) Copy the public key (it was created in ~/.ssh/deployer.pub in your machine):
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```shell
+cat ~/.ssh/deployer.pub | pbcopy
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+6. Go to https://github.com/settings/keys
+7. Click 'Add new SSH' Key and paste the contents in public key field
+8. Copy the private key contents (it was created in ~/.ssh/deployer in your machine):
+
+```shell
+cat ~/.ssh/deployer | pbcopy
+```
+
+9. Push your code to Github
+
+10. Copy the repository URL
+
+11. Go to `https://github.com/<YOUR GITHUB USER>/<YOUR REPO NAME>/settings/secrets/actions`
+
+12. Create secret `SSH_PRIVATE_KEY` and paste the private key contents
+
+13. Create secret: `SERVER_IP` as <YOUR SERVER IP>
+
+14. Create secret: `SERVER_USER` as <YOUR SERVER USER>
+
+15. SSH into your server using the deployer user:
+
+```shell
+ssh -i ~/.ssh/deployer deployer@<YOUR SERVER IP>
+```
+
+16. Clone your repository into `/var/www/<DOMAIN NAME>`
+
+```shell
+git clone https://github.com/<YOUR GITHUB USER>/<YOUR REPO NAME>.git /var/www/<DOMAIN NAME>
+```
+
+Done! Every merge to main branch will be deployed.
+
+### Try it out!
+
+17. Commit something to the `main` branch (or the one you selected in setup)
+18. The action will run automatically, wait until it finishes
+19. Access your domain and there you have it!
+
+### Reach out
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app). You may use the boilerplate. Or if you want to deploy a different type of application, go to `speed_run_deploy.sh`
+
+**Thiago V Ricieri**
+
+- System Thinker @ [Systematic Success](https://systematicsuccess.net/?utm_source=github&utm_medium=social&utm_campaign=speed_run_deploy)
+- Maker @ [Making of a Maker](https://makingofamaker.substack.com/?utm_source=github&utm_medium=social&utm_campaign=speed_run_deploy)
+- Engineering Manager,  Apps @ [Pluto TV](https://pluto.tv/) / [Paramount Global](https://paramount.com/)
+- Founder @ [Ghost Ship & Co.](https://ghostship.co/?utm_source=github&utm_medium=social&utm_campaign=speed_run_deploy)
+- Digital Nomad @ [Threads](https://www.threads.net/@thgvr), [X.com](http://x.com), [LinkedIn](https://linkedin.com/in/thiagoricieri), [GitHub](https://github.com/thiagoricieri), [Instagram](https://www.instagram.com/thgvr), [Website](https://thgvr.com/?utm_source=github&utm_medium=social&utm_campaign=speed_run_deploy)
